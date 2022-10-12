@@ -1,0 +1,1 @@
+sudo helm uninstall nfs-subdir-external-provisioner

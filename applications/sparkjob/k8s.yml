@@ -7,7 +7,7 @@ spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: PRIVATE_DOCKER_REGISTRY/breacher/sparkjob:1.0
+  image: http://PRIVATE_DOCKER_REGISTRY/breacher/sparkjob:1.0
   imagePullPolicy: Always
   mainApplicationFile: "local:///app/main.py"
   sparkVersion: "3.0.0"

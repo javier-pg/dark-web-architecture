@@ -1,0 +1,88 @@
+#auth:
+#  clientProtocol: sasl
+#  interBrokerProtocol: plaintext
+#  jaas:
+    #clientUsers: 
+    #  -   default user: 'user'
+#    clientPasswords:
+#      - KAFKA_PASSWORD
+extraDeploy:
+  - |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{ include "kafka.fullname" . }}-connect
+      labels: {{- include "common.labels.standard" . | nindent 4 }}
+        app.kubernetes.io/component: connector
+    spec:
+      replicas: 1
+      selector:
+        matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+          app.kubernetes.io/component: connector
+      template:
+        metadata:
+          labels: {{- include "common.labels.standard" . | nindent 8 }}
+            app.kubernetes.io/component: connector
+        spec:
+          containers:
+            - name: connect
+              image: PRIVATE_DOCKER_REGISTRY/breacher/kafka:1.0
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  /opt/bitnami/kafka/bin/connect-standalone.sh /config/connect-standalone.properties /config/mongodb.properties
+              ports:
+                - name: connector
+                  containerPort: 8083
+              volumeMounts:
+                - name: configuration
+                  mountPath: /config
+          volumes:
+            - name: configuration
+              configMap:
+                name: {{ include "kafka.fullname" . }}-connect
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include "kafka.fullname" . }}-connect
+      labels: {{- include "common.labels.standard" . | nindent 4 }}
+        app.kubernetes.io/component: connector
+    data:
+      connect-standalone.properties: |-
+        bootstrap.servers = {{ include "kafka.fullname" . }}-0.{{ include "kafka.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=true
+        value.converter.schemas.enable=true
+        offset.storage.file.filename=/tmp/connect.offsets
+        offset.flush.interval.ms=10000
+        plugin.path=/opt/bitnami/kafka/plugins
+      mongodb.properties: |-
+        connection.uri=mongodb://mongo.crawlab.svc.cluster.local:27017
+        name=mongo-source-connector
+        connector.class=com.mongodb.kafka.connect.MongoSourceConnector
+        tasks.max=1
+        key.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        key.converter.schemas.enable=false
+        value.converter.schemas.enable=false
+        database=crawlab_test
+        collection=results_onions_farmer
+        publish.full.document.only=true
+  - |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{ include "kafka.fullname" . }}-connect
+      labels: {{- include "common.labels.standard" . | nindent 4 }}
+        app.kubernetes.io/component: connector
+    spec:
+      ports:
+        - protocol: TCP
+          port: 8083
+          targetPort: connector
+      selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+        app.kubernetes.io/component: connector

@@ -3,7 +3,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import Selector 
 from urllib.parse import urlparse
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class OnionsSpider(CrawlSpider):
@@ -20,10 +20,9 @@ class OnionsSpider(CrawlSpider):
 
        
         for onion in onions:
-            today = datetime.today() - timedelta(hours=6, minutes=00)
+            today = datetime.today().timestamp()
             yield {
                 'advertiser': urlparse(response.url).netloc,
                 'onion': onion,
-                'timestamp': today.strftime("%d/%m/%Y %H:%M:%S"),
-                'date': today.strftime("%d/%m/%Y")
+                'timestamp': today
             }

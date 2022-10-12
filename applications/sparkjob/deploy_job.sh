@@ -1,3 +1,4 @@
+source ../local.env
 docker build -t sparkjob:1.0 .
 docker tag sparkjob:1.0 $PRIVATE_DOCKER_REGISTRY/breacher/sparkjob:1.0
 docker push $PRIVATE_DOCKER_REGISTRY/breacher/sparkjob:1.0
