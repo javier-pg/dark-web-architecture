@@ -1,0 +1,30 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: torproxy
+  labels:
+    name: torproxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: torproxy
+  namespace: torproxy
+  labels:
+    app: torproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: torproxy
+  template:
+    metadata:
+      labels:
+        app: torproxy
+    spec:
+      containers:
+      - name: torproxy
+        imagePullPolicy: Always
+        image: dperson/torproxy
+        ports:
+        - containerPort: 9050

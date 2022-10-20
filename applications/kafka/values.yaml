@@ -1,11 +1,3 @@
-#auth:
-#  clientProtocol: sasl
-#  interBrokerProtocol: plaintext
-#  jaas:
-    #clientUsers: 
-    #  -   default user: 'user'
-#    clientPasswords:
-#      - KAFKA_PASSWORD
 extraDeploy:
   - |
     apiVersion: apps/v1
