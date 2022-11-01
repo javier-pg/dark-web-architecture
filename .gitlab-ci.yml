@@ -10,7 +10,7 @@ deploy_minio:
   script:
     - echo "deploy_minio"
     - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/namespace.yaml
-    - kubectl --insecure-skip-tls-verify=true create secret generic minio-credentials --from-literal=MINIO_ROOT_USER=$MINIO_ROOT_USER --from-literal=MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD # define in Gitlab ENV
+    - kubectl --insecure-skip-tls-verify=true create secret generic minio-credentials --from-literal=MINIO_ROOT_USER=$MINIO_ROOT_USER --from-literal=MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD -n minio # define in Gitlab ENV
     - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/deployment.yaml
     - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/service.yaml
     
