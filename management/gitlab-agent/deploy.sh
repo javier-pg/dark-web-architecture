@@ -1,4 +1,5 @@
-helm upgrade --install primary-agent gitlab/gitlab-agent \
+source ../local.env
+sudo helm upgrade --install kubernetes gitlab/gitlab-agent \
     --namespace gitlab-agent \
     --set image.tag=v15.2.0 \
     --set config.token=$GITLAB_AGENT_TOKEN \

@@ -43,6 +43,7 @@ spec:
           - "--bind_ip_all"   
           # Execute in mongodb pod:
           # rs.initiate({_id:"rs0", version: 1, members: [ {_id: 0, host: "mongo.crawlab.svc.cluster.local:27017"} ]})
+          # use crawlab_test 
           # db.results_onions_farmer.createIndex({"onion":1},{unique:true})
   volumeClaimTemplates:
     - metadata:

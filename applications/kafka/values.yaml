@@ -1,3 +1,5 @@
+deleteTopicEnable: true
+numPartitions: 10
 extraDeploy:
   - |
     apiVersion: apps/v1

@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: minio
+  name: minio
+  namespace: minio
+spec:
+  hostname: minio
+  containers:
+  - name: minio
+    image: quay.io/minio/minio:RELEASE.2022-10-21T22-37-48Z
+    command:
+    - /bin/bash
+    - -c
+    args:
+    - minio server /data --console-address :9010
+    volumeMounts:
+    - mountPath: /data
+      name: localvolume
+    env:
+    - name: MINIO_ROOT_USER
+      valueFrom:
+        secretKeyRef:
+          name: minio-credentials
+          key: MINIO_ROOT_USER
+          optional: false
+    - name: MINIO_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: minio-credentials
+          key: MINIO_ROOT_PASSWORD
+          optional: false
+  nodeSelector:
+    kubernetes.io/hostname: worker01 # Specify a node label associated to the Worker Node on which you want to deploy the pod.
+  volumes:
+  - name: localvolume
+    hostPath: # MinIO generally recommends using locally-attached volumes
+      path: /hdd-storage/minio # Specify a path to a local drive or volume on the Kubernetes worker node
+      type: DirectoryOrCreate # The path to the last directory must exist

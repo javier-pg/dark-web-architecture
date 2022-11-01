@@ -17,6 +17,8 @@ COPY validation.go /go/pkg/mod/github.com/s-rah/onionscan\@v0.0.0-20170225171031
 
 RUN go install github.com/s-rah/onionscan@latest
 
+ENV TZ=Europe/Madrid
+
 WORKDIR /home
 
 RUN mkdir /home/onionscandb

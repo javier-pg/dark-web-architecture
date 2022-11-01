@@ -1,2 +1,3 @@
 source ../local.env
-sudo kubectl apply -f .
+kubectl apply -f ns.yaml
+kubectl apply -f .

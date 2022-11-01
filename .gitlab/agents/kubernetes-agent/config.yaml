@@ -1,0 +1,8 @@
+ci_access:
+  groups:
+    - id: javierpg/breacher
+observability:
+  logging:
+    level: debug
+    grpc_level: error
+

@@ -1,26 +1,43 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- build
-- test
 - deploy
-- review
-- dast
-- staging
-- canary
-- production
-- incremental rollout 10%
-- incremental rollout 25%
-- incremental rollout 50%
-- incremental rollout 100%
-- performance
-- cleanup
-sast:
-  stage: test
-include:
-- template: Auto-DevOps.gitlab-ci.yml
+- test
+
+deploy_minio:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - echo "deploy_minio"
+    - kubectl --insecure-skip-tls-verify=true create secret generic minio-credentials --from-file=MINIO_ROOT_USER=./applications/minio/username.txt --from-file=MINIO_ROOT_PASSWORD=./applications/minio/password.txt
+    - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/namespace.yaml
+    - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/deployment.yaml
+    - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/service.yaml
+    
+deploy_crawlab:
+  stage: deploy
+  script:
+    - echo "deploy_crawlab"
+
+deploy_torproxy:
+  stage: deploy
+  script:
+    - echo "deploy_torproxy"
+    
+deploy_kafka:
+  stage: deploy
+  needs:
+    - deploy_crawlab
+  script:
+    - echo "deploy_kafka"
+    
+deploy_oniondownloader:
+  stage: deploy
+  needs:
+    - deploy_torproxy
+    - deploy_minio
+    - deploy_kafka
+  script:
+    - echo "deploy_oniondownloader"
+    
+
