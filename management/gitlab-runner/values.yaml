@@ -150,7 +150,7 @@ sessionServer:
 
 ## For RBAC support:
 rbac:
-  create: true
+  create: false
 
   ## Define specific rbac permissions.
   ## DEPRECATED: see .Values.rbac.rules
@@ -175,7 +175,7 @@ rbac:
 
   ## Use the following Kubernetes Service Account name if RBAC is disabled in this Helm chart (see rbac.create)
   ##
-  # serviceAccountName: default
+  serviceAccountName: gitlab-runner
 
   ## Specify annotations for Service Accounts, useful for annotations such as eks.amazonaws.com/role-arn
   ##
