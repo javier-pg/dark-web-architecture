@@ -171,7 +171,7 @@ rbac:
 
   ## Run the gitlab-bastion container with the ability to deploy/manage containers of jobs
   ## cluster-wide or only within namespace
-  clusterWideAccess: false
+  clusterWideAccess: true
 
   ## Use the following Kubernetes Service Account name if RBAC is disabled in this Helm chart (see rbac.create)
   ##
