@@ -10,9 +10,9 @@ deploy_minio:
   script:
     - echo "deploy_minio"
     - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/namespace.yaml
-    - kubectl --insecure-skip-tls-verify=true create secret generic minio-credentials --from-file=MINIO_ROOT_USER=./applications/minio/username.txt --from-file=MINIO_ROOT_PASSWORD=./applications/minio/password.txt -n minio
-    - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/deployment.yaml
-    - kubectl --insecure-skip-tls-verify=true apply -f applications/minio/service.yaml
+    #- kubectl --insecure-skip-tls-verify=true create secret generic minio-credentials --from-file=MINIO_ROOT_USER=./applications/minio/username.txt --from-file=MINIO_ROOT_PASSWORD=./applications/minio/password.txt -n minio
+    #- kubectl --insecure-skip-tls-verify=true apply -f applications/minio/deployment.yaml
+    #- kubectl --insecure-skip-tls-verify=true apply -f applications/minio/service.yaml
     
 deploy_crawlab:
   stage: deploy
