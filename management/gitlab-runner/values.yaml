@@ -14,7 +14,7 @@
 image:
   registry: registry.gitlab.com
   image: gitlab-org/gitlab-runner
-  #tag: alpine-v15.1.2
+  tag: alpine-v15.2.0
 
 ## Specify a imagePullPolicy for the main runner deployment
 ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
