@@ -7,9 +7,6 @@ variables:
   KAFKA_IMAGE_NAME: breacher/kafka
   KAFKA_IMAGE_TAG: v2.0
 
-services:
-  - docker:20.10.16-dind
-
 stages:
 - build
 - deploy
@@ -18,7 +15,10 @@ stages:
 build_kafka:
   stage: build
   image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
   before_script:
+    - sleep 20s
     - docker info
   script:
     - cd applications/kafka
