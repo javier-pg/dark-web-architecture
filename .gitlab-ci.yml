@@ -18,7 +18,7 @@ build_kafka:
   services:
     - docker:20.10.16-dind
   before_script:
-    - sleep 30
+    - until docker info; do sleep 1; done
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
