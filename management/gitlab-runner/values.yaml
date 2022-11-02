@@ -326,6 +326,7 @@ runners:
       [runners.kubernetes]
         namespace = "{{.Release.Namespace}}"
         image = "ubuntu:16.04"
+        privileged = true
 
   ## Which executor should be used
   ##
