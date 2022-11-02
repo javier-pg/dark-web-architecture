@@ -61,9 +61,9 @@ deploy_crawlab:
     - kubectl apply -f redis-service.yaml
     - kubectl apply -f crawlab-deployment.yaml
     - kubectl apply -f crawlab-service.yaml
-  #only:
-  #  changes:
-  #    - applications/crawlab/*
+  only:
+    changes:
+      - applications/crawlab/*
 
 deploy_torproxy:
   stage: deploy
@@ -86,9 +86,9 @@ deploy_kafka:
     - kubectl apply -f namespace.yaml
     - helm install kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka
     - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions 10
-  only:
-    changes:
-      - application/kafka/*
+  #only:
+  #  changes:
+  #    - application/kafka/*
 
 deploy_oniondownloader:
   stage: deploy
