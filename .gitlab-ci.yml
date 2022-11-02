@@ -1,5 +1,5 @@
 variables:
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_REGISTRY: 10.10.10.106:5000
   KAFKA_IMAGE_NAME: breacher/kafka
   KAFKA_IMAGE_TAG: v2.0
