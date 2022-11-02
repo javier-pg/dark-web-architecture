@@ -1,10 +1,3 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: torproxy
-  labels:
-    name: torproxy
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,7 +6,7 @@ metadata:
   labels:
     app: torproxy
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: torproxy
