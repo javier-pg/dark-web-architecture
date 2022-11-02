@@ -14,9 +14,9 @@ stages:
 
 build_kafka:
   stage: build
-  image: docker:19.03.15
+  image: docker:20.10.16
   services:
-    - docker:19.03.15-dind
+    - docker:20.10.16-dind
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
