@@ -81,6 +81,8 @@ deploy_kafka:
   image:
     name: dtzar/helm-kubectl:latest
     entrypoint: ['']
+  before_script:
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
   script:
     - cd applications/kafka
     - kubectl apply -f namespace.yaml
