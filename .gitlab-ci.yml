@@ -13,8 +13,6 @@ variables:
   DOCKER_TLS_VERIFY: 1
   DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   DOCKER_REGISTRY: 10.10.10.106:5000
-  KAFKA_IMAGE_NAME: breacher/kafka
-  KAFKA_IMAGE_TAG: v2.0
 
 services:
     - name: docker:20.10.10-dind
@@ -24,6 +22,9 @@ services:
 build_kafka:
   stage: build
   image: docker:20.10.10
+  variables:
+    KAFKA_IMAGE_NAME: breacher/kafka
+    KAFKA_IMAGE_TAG: v1.0
   before_script:
     - sleep 5s
     - docker info
@@ -80,19 +81,14 @@ deploy_kafka:
   image:
     name: dtzar/helm-kubectl:latest
     entrypoint: ['']
-  variables:
-    KAFKA_TOPIC_PARTITIONS: 10
-    KAFKA_IMAGE: "$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG"
   script:
     - cd applications/kafka
     - kubectl apply -f namespace.yaml
-    - 'sed -i s"/KAFKA_IMAGE/\"${KAFKA_IMAGE}\"/" values.yaml'
-    - 'sed -i s"/NUM_PARTITIONS/\"${KAFKA_TOPIC_PARTITIONS}\"/" values.yaml'
     - helm install kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka
-    - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions $KAFKA_TOPIC_PARTITIONS
-  #only:
-  #  changes:
-  #    - application/kafka/*
+    - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions 10
+  only:
+    changes:
+      - application/kafka/*
 
 deploy_oniondownloader:
   stage: deploy

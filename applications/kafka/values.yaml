@@ -20,7 +20,7 @@ extraDeploy:
         spec:
           containers:
             - name: connect
-              image: KAFKA_IMAGE
+              image: 10.10.10.106:5000/breacher/kafka:1.0
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/bash
