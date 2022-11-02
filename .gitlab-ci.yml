@@ -18,7 +18,7 @@ build_kafka:
   services:
     - name: docker:20.10.10-dind
       entrypoint: ["dockerd-entrypoint.sh"]
-      command: ["--insecure-registry", "10.10.10.106:5000"]
+      command: ["--insecure-registry", "$DOCKER_REGISTRY"]
   before_script:
     - sleep 5s
     - docker info
@@ -26,7 +26,7 @@ build_kafka:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
     - docker tag $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
-    - docker push http://$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
+    - docker push $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
 
 deploy_minio:
   stage: deploy
