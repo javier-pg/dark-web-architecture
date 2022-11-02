@@ -16,7 +16,11 @@ build_kafka:
   stage: build
   image: docker:20.10.10
   services:
-  - docker:20.10.10-dind
+    - name: docker:20.10.10-dind
+      command:
+      [
+        '--insecure-registry=$DOCKER_REGISTRY',
+      ]
   before_script:
     - sleep 5s
     - docker info
