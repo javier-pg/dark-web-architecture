@@ -3,6 +3,10 @@ stages:
 - deploy
 - test
 
+image:
+  name: bitnami/kubectl:latest
+  entrypoint: ['']
+
 variables:
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: "/certs"
@@ -34,9 +38,6 @@ build_kafka:
 
 deploy_minio:
   stage: deploy
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
   script:
     - cd applications/minio
     - kubectl apply -f namespace.yaml
@@ -50,9 +51,6 @@ deploy_minio:
 
 deploy_crawlab:
   stage: deploy
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
   script:
     - cd applications/crawlab
     - kubectl apply -f namespace.yaml
@@ -68,9 +66,6 @@ deploy_crawlab:
 
 deploy_torproxy:
   stage: deploy
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: ['']
   script:
     - cd applications/torproxy
     - kubectl apply -f namespace.yaml
@@ -80,9 +75,11 @@ deploy_torproxy:
     changes:
       - applications/torproxy/*
 
-
 deploy_kafka:
   stage: deploy
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: ['']
   variables:
     KAFKA_TOPIC_PARTITIONS: 10
   script:
