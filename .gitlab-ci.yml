@@ -17,7 +17,8 @@ build_kafka:
   image: docker:20.10.10
   services:
     - name: docker:20.10.10-dind
-      command: ["--insecure-registry=$DOCKER_REGISTRY"]
+      entrypoint: ["dockerd-entrypoint.sh"]
+      command: ["--insecure-registry", "10.10.10.106:5000"]
   before_script:
     - sleep 5s
     - docker info
