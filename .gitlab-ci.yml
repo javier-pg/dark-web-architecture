@@ -18,10 +18,11 @@ build_kafka:
   services:
     - name: docker:20.10.10-dind
       entrypoint: ["dockerd-entrypoint.sh"]
-      command: ["--insecure-registry", "10.10.10.106:5000"]
+      variables:
+        DOCKER_REGISTRY: $DOCKER_REGISTRY
+      command: ["--insecure-registry", "$DOCKER_REGISTRY"]
   before_script:
     - sleep 5s
-    - docker info
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
