@@ -7,6 +7,11 @@ variables:
   KAFKA_IMAGE_NAME: breacher/kafka
   KAFKA_IMAGE_TAG: v2.0
 
+services:
+  - name: docker:20.10.10-dind
+    alias: docker
+    command: ["--tls=false"]
+
 stages:
 - build
 - deploy
@@ -14,11 +19,9 @@ stages:
 
 build_kafka:
   stage: build
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
-  before_script:
-    - until docker info; do sleep 1; done
+  image: docker:20.10.10
+  variables: 
+    DOCKER_TLS_CERTDIR: ""
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
