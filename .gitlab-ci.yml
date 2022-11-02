@@ -86,7 +86,7 @@ deploy_kafka:
   variables:
     KAFKA_TOPIC_PARTITIONS: 10
   script:
-    - cd application/kafka
+    - cd applications/kafka
     - kubectl apply -f namespace.yaml
     - sed -i 's/KAFKA_IMAGE/'"$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG"'/' values.yaml
     - sed -i 's/NUM_PARTITIONS/'"$KAFKA_TOPIC_PARTITIONS"'/' values.yaml
