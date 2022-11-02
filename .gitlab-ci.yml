@@ -1,7 +1,7 @@
 variables:
   DOCKER_REGISTRY: 10.10.10.106:5000
   KAFKA_IMAGE_NAME: breacher/kafka
-  KAFKA_IMAGE_TAG: 2.0
+  KAFKA_IMAGE_TAG: v2.0
 
 stages:
 - build
