@@ -19,6 +19,7 @@ build_kafka:
     - docker:20.10.16-dind
   script:
     - cd applications/kafka
+    - sleep 5
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
     - docker tag $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
     - docker push $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
