@@ -82,10 +82,11 @@ deploy_kafka:
     entrypoint: ['']
   variables:
     KAFKA_TOPIC_PARTITIONS: 10
+    KAFKA_IMAGE: "$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG"
   script:
     - cd applications/kafka
     - kubectl apply -f namespace.yaml
-    - sed -i 's/KAFKA_IMAGE/'"$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG"'/' values.yaml
+    - sed -i 's/KAFKA_IMAGE/'"$KAFKA_IMAGE"'/' values.yaml
     - sed -i 's/NUM_PARTITIONS/'"$KAFKA_TOPIC_PARTITIONS"'/' values.yaml
     - helm install kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka
     - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions $KAFKA_TOPIC_PARTITIONS
