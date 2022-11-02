@@ -77,7 +77,8 @@ deploy_kafka:
   script:
     - cd applications/kafka
     - kubectl apply -f namespace.yaml
-    - helm template kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka | kubectl apply -f
+    - helm template kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka > kafka.yaml
+    - kubectl apply -f kafka.yaml
     - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions 10
   needs:
     - deploy_crawlab
