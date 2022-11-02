@@ -8,9 +8,7 @@ variables:
   KAFKA_IMAGE_TAG: v2.0
 
 services:
-  - name: docker:20.10.10-dind
-    alias: docker
-    command: ["--tls=false"]
+  - docker:20.10.16-dind
 
 stages:
 - build
@@ -19,9 +17,9 @@ stages:
 
 build_kafka:
   stage: build
-  image: docker:20.10.10
-  variables: 
-    DOCKER_TLS_CERTDIR: ""
+  image: docker:20.10.16
+  before_script:
+    - docker info
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
