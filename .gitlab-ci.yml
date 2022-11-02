@@ -14,11 +14,12 @@ stages:
 
 build_kafka:
   stage: build
-  image: docker:20.10.16
+  image: docker:20.10.10
   services:
-    - docker:20.10.16-dind
+  - docker:20.10.10-dind
   before_script:
-    - sleep 3s
+    - sleep 5s
+    - docker info
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
