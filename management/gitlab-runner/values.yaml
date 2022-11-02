@@ -324,8 +324,7 @@ runners:
   config: |
     [[runners]]
       [runners.kubernetes]
-        namespace = "{{.Release.Namespace}}"
-        image = "ubuntu:16.04"
+        image = "ubuntu:20.04"
         privileged = true
       [[runners.kubernetes.volumes.empty_dir]]
         name = "docker-certs"
