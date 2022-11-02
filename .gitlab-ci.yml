@@ -1,6 +1,5 @@
 variables:
-  #DOCKER_HOST: tcp://docker:2375
-  #DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_REGISTRY: 10.10.10.106:5000
   KAFKA_IMAGE_NAME: breacher/kafka
   KAFKA_IMAGE_TAG: v2.0
@@ -12,9 +11,9 @@ stages:
 
 build_kafka:
   stage: build
-  image: docker:18.09.9
+  image: docker:20.10.16
   services:
-    - docker:18.09.9-dind
+    - docker:20.10.16-dind
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
