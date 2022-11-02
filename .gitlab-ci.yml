@@ -61,9 +61,9 @@ deploy_crawlab:
     - kubectl apply -f redis-service.yaml
     - kubectl apply -f crawlab-deployment.yaml
     - kubectl apply -f crawlab-service.yaml
-  only:
-    changes:
-      - applications/crawlab/*
+  #only:
+  #  changes:
+  #    - applications/crawlab/*
 
 deploy_torproxy:
   stage: deploy
