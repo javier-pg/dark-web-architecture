@@ -1,7 +1,7 @@
 stages:
 - build
-- deploy
-- test
+- deploy_1
+- deploy_2
 
 image:
   name: bitnami/kubectl:latest
@@ -38,7 +38,7 @@ build_kafka:
       - applications/kafka/Dockerfile
 
 deploy_minio:
-  stage: deploy
+  stage: deploy_1
   script:
     - cd applications/minio
     - kubectl apply -f namespace.yaml
@@ -46,9 +46,12 @@ deploy_minio:
     - kubectl create secret generic minio-credentials --from-literal=MINIO_ROOT_USER=$MINIO_ROOT_USER --from-literal=MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD -n minio # define in Gitlab ENV
     - kubectl apply -f deployment.yaml
     - kubectl apply -f service.yaml
+  only:
+      changes:
+        - applications/minio
 
 deploy_crawlab:
-  stage: deploy
+  stage: deploy_1
   script:
     - cd applications/crawlab
     - kubectl apply -f namespace.yaml
@@ -58,17 +61,23 @@ deploy_crawlab:
     - kubectl apply -f redis-service.yaml
     - kubectl apply -f crawlab-deployment.yaml
     - kubectl apply -f crawlab-service.yaml
+  only:
+    changes:
+      - applications/crawlab
 
 deploy_torproxy:
-  stage: deploy
+  stage: deploy_1
   script:
     - cd applications/torproxy
     - kubectl apply -f namespace.yaml
     - kubectl apply -f deployment.yaml
     - kubectl apply -f service.yaml
+  only:
+    changes:
+      - applications/torproxy
 
 deploy_kafka:
-  stage: deploy
+  stage: deploy_1
   image:
     name: dtzar/helm-kubectl:latest
     entrypoint: ['']
@@ -80,16 +89,11 @@ deploy_kafka:
     - helm template kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka > kafka.yaml
     - kubectl apply -f kafka.yaml -n kafka
     # - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions 10
-  needs:
-    - deploy_crawlab
+  only:
+    changes:
+      - applications/kafka
 
 deploy_oniondownloader:
-  stage: deploy
+  stage: deploy_2
   script:
     - echo "deploy_oniondownloader"
-  needs:
-    - deploy_torproxy
-    - deploy_minio
-    - deploy_kafka
-    
-
