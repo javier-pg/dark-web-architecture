@@ -28,6 +28,9 @@ build_kafka:
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
     - docker tag $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
     - docker push $DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG
+  only:
+    changes:
+      - applications/kafka/Dockerfile
 
 deploy_minio:
   stage: deploy
@@ -41,6 +44,9 @@ deploy_minio:
     - kubectl create secret generic minio-credentials --from-literal=MINIO_ROOT_USER=$MINIO_ROOT_USER --from-literal=MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD -n minio # define in Gitlab ENV
     - kubectl apply -f deployment.yaml
     - kubectl apply -f service.yaml
+  only:
+    changes:
+      - applications/minio/*
 
 deploy_crawlab:
   stage: deploy
@@ -56,6 +62,9 @@ deploy_crawlab:
     - kubectl apply -f redis-service.yaml
     - kubectl apply -f crawlab-deployment.yaml
     - kubectl apply -f crawlab-service.yaml
+  only:
+    changes:
+      - applications/crawlab/*
 
 deploy_torproxy:
   stage: deploy
@@ -67,14 +76,27 @@ deploy_torproxy:
     - kubectl apply -f namespace.yaml
     - kubectl apply -f deployment.yaml
     - kubectl apply -f service.yaml
+  only:
+    changes:
+      - applications/torproxy/*
 
 deploy_kafka:
   stage: deploy
   needs:
     - deploy_crawlab
+  variables:
+    KAFKA_TOPIC_PARTITIONS: 10
   script:
-    - echo "deploy_kafka"
-    
+    - cd application/kafka
+    - kubectl apply -f namespace.yaml
+    - sed -i 's/KAFKA_IMAGE/'"$DOCKER_REGISTRY/$KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG"'/' values.yaml
+    - sed -i 's/NUM_PARTITIONS/'"$KAFKA_TOPIC_PARTITIONS"'/' values.yaml
+    - helm install kafka bitnami/kafka -f values.yaml --version 14.9.3 -n kafka
+    - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions $KAFKA_TOPIC_PARTITIONS
+  only:
+    changes:
+      - application/kafka/*
+
 deploy_oniondownloader:
   stage: deploy
   needs:
