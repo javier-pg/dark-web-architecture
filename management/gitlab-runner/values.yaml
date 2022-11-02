@@ -326,8 +326,6 @@ runners:
       [runners.kubernetes]
         image = "ubuntu:20.04"
         privileged = true
-        allowed_images = ["10.10.10.106:5000/*:*"]
-        allowed_services = ["10.10.10.106:5000/*:*"]
       [[runners.kubernetes.volumes.empty_dir]]
         name = "docker-certs"
         mount_path = "/certs/client"
