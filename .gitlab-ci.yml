@@ -27,7 +27,6 @@ build_kafka:
     KAFKA_IMAGE_TAG: v1.0
   before_script:
     - sleep 5s
-    - docker info
   script:
     - cd applications/kafka
     - docker build -t $KAFKA_IMAGE_NAME:$KAFKA_IMAGE_TAG .
@@ -36,6 +35,23 @@ build_kafka:
   only:
     changes:
       - applications/kafka/Dockerfile
+
+build_oniondownloader:
+  stage: build
+  image: docker:20.10.10
+  variables:
+    ONIONDOWNLOADER_IMAGE_NAME: breacher/oniondownloader
+    ONIONDOWNLOADER_IMAGE_TAG: v1.0
+  before_script:
+    - sleep 5s
+  script:
+    - cd applications/oniondownloader
+    - docker build -t $ONIONDOWNLOADER_IMAGE_NAME:$ONIONDOWNLOADER_IMAGE_TAG .
+    - docker tag $ONIONDOWNLOADER_IMAGE_NAME:$ONIONDOWNLOADER_IMAGE_TAG $DOCKER_REGISTRY/$ONIONDOWNLOADER_IMAGE_NAME:$ONIONDOWNLOADER_IMAGE_TAG
+    - docker push $DOCKER_REGISTRY/$ONIONDOWNLOADER_IMAGE_NAME:$ONIONDOWNLOADER_IMAGE_TAG
+  only:
+    changes:
+      - applications/oniondownloader/*
 
 deploy_minio:
   stage: deploy_1
@@ -96,4 +112,11 @@ deploy_kafka:
 deploy_oniondownloader:
   stage: deploy_2
   script:
-    - echo "deploy_oniondownloader"
+    - cd applications/oniondownloader
+    - kubectl apply -f namespace.yaml
+    - kubectl delete secret minio-credentials --ignore-not-found -n oniondownloader
+    - kubectl create secret generic minio-credentials --from-literal=MINIO_ONION_ACCESS_KEY=$MINIO_ONION_ACCESS_KEY --from-literal=MINIO_ONION_SECRET_KEY=$MINIO_ONION_SECRET_KEY -n oniondownloader # define in Gitlab ENV
+    - kubectl apply -f deployment.yaml
+  only:
+    changes:
+      - applications/oniondownloader

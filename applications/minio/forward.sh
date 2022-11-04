@@ -1,3 +1,2 @@
 # for local forwarding
-source ../local.env
-kubectl port-forward -n minio --address $MINIO_IPADDRESS pod/minio 9011:9010
+kubectl port-forward -n minio --address 10.10.10.111 pod/minio 9011:9010

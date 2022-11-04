@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oniondownloader
+  namespace: oniondownloader
+  labels:
+    app: oniondownloader
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: oniondownloader
+  template:
+    metadata:
+      labels:
+        app: oniondownloader
+    spec:
+      containers:
+      - name: oniondownloader
+        image: 10.10.10.106:5000/breacher/oniondownloader:1.0
+        env:
+          - name: MINIO_ONION_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: MINIO_ONION_ACCESS_KEY
+                optional: false
+          - name: MINIO_ONION_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: MINIO_ONION_SECRET_KEY
+                optional: false
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9050

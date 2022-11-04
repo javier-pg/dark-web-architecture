@@ -48,9 +48,6 @@ def kafka():
 
 def get_onions(consumer):
     for message in consumer:
-        tp=TopicPartition(message.topic,message.partition)
-        om = OffsetAndMetadata(message.offset+1, message.timestamp)
-        consumer.commit({tp:om})
         try:
             print("---")
             m = loads(message.value.decode('utf-8'))
@@ -60,7 +57,7 @@ def get_onions(consumer):
                 print(f"New record {message} does not have the 'onion' field")
             else:
                 print(f"{datetime.datetime.now()} [onion] {onion} [partition] {message.partition} [offset] {message.offset}")
-                yield onion
+                yield onion, TopicPartition(message.topic,message.partition), OffsetAndMetadata(message.offset+1, message.timestamp)
         except Exception as error:
             print(f"Decoding error of {message} ({error})")
             continue
@@ -69,10 +66,10 @@ def get_onions(consumer):
 def minio():
     try:
         client = Minio(
-            endpoint=os.environ['MINIO_ENDPOINT'],
+            endpoint="minio.minio.svc.cluster.local:9000",
             secure=False,
-            access_key=os.environ['MINIO_AKEY'],
-            secret_key=os.environ['MINIO_SKEY']
+            access_key=os.environ['MINIO_ONION_ACCESS_KEY'],
+            secret_key=os.environ['MINIO_ONION_SECRET_KEY']
         )
         print("MinIO configured!")
     except S3Error as exc:
@@ -190,15 +187,17 @@ minio = minio()
 consumer = kafka()
 
 if consumer is not False:
-    for onion in get_onions(consumer):
+    for onion, tp, om in get_onions(consumer):
         
-        print(f"{onion} ", end="-> ", flush=True)
+        #print(f"{onion} ", end="-> ", flush=True)
 
         # get HTML
         html = get_html(onion)
         if html is not False:
             save_html(minio, onion, html)
             # get SCANNING
-            scan = run_onionscan(onion)
-            if scan is not False:
-                save_scan(minio, onion, scan)
+            #scan = run_onionscan(onion)
+            #if scan is not False:
+            #    save_scan(minio, onion, scan)
+        
+        consumer.commit({tp:om})

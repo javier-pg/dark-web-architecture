@@ -1,1 +1,1 @@
-kubectl delete -f oniondownloader.yaml
+kubectl delete -f deployment.yaml
