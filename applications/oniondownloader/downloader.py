@@ -17,7 +17,7 @@ HTML_TIMEOUT = 60
 SCAN_TIMEOUT = HTML_TIMEOUT
 HTML_RETRIES = 3
 SCAN_RETRIES = 3
-MAX_PROCESSING_TIME = 1000*HTML_RETRIES*HTML_TIMEOUT
+MAX_PROCESSING_TIME = 1000*HTML_RETRIES*HTML_TIMEOUT)
 #MAX_PROCESSING_TIME = 1000*(HTML_RETRIES*HTML_TIMEOUT+SCAN_RETRIES*SCAN_TIMEOUT)
 
 KAFKA_MAX_POLL_RECORDS = 5
@@ -118,9 +118,9 @@ def save_html(client, onion, html):
             length=len(bhtml),
             content_type='application/html'
         )
-        print("OK", end="; ", flush=True)
+        print("OK;", flush=True)
     except S3Error as exc:
-        print(f"ERROR ({exc})", end="; ", flush=True)
+        print(f"ERROR ({exc})", flush=True)
 
 ############################ SCAN ############################
 def handle_timeout(process):
