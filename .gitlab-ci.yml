@@ -51,7 +51,8 @@ build_oniondownloader:
     - docker push $DOCKER_REGISTRY/$ONIONDOWNLOADER_IMAGE_NAME:$ONIONDOWNLOADER_IMAGE_TAG
   only:
     changes:
-      - applications/oniondownloader/*
+      - applications/oniondownloader/downloader.py
+      - applications/oniondownloader/Dockerfile
 
 deploy_minio:
   stage: deploy_1
@@ -64,7 +65,7 @@ deploy_minio:
     - kubectl apply -f service.yaml
   only:
       changes:
-        - applications/minio
+        - applications/minio/*
 
 deploy_crawlab:
   stage: deploy_1
@@ -79,7 +80,7 @@ deploy_crawlab:
     - kubectl apply -f crawlab-service.yaml
   only:
     changes:
-      - applications/crawlab
+      - applications/crawlab/*
 
 deploy_torproxy:
   stage: deploy_1
@@ -90,7 +91,7 @@ deploy_torproxy:
     - kubectl apply -f service.yaml
   only:
     changes:
-      - applications/torproxy
+      - applications/torproxy/*
 
 deploy_kafka:
   stage: deploy_1
@@ -107,7 +108,7 @@ deploy_kafka:
     # - kubectl exec -n kafka kafka-0 -- kafka-topics.sh --alter --bootstrap-server localhost:9092 --topic crawlab_test.results_onions_farmer --partitions 10
   only:
     changes:
-      - applications/kafka
+      - applications/kafka/*
 
 deploy_oniondownloader:
   stage: deploy_2
@@ -119,4 +120,4 @@ deploy_oniondownloader:
     - kubectl apply -f deployment.yaml
   only:
     changes:
-      - applications/oniondownloader
+      - applications/oniondownloader/*

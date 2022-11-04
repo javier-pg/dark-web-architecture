@@ -74,7 +74,8 @@ def minio():
         print("MinIO configured!")
     except S3Error as exc:
         print("error occurred.", exc, flush=True)
-    
+        return False
+        
     # Make 'asiatrip' bucket if not exist.
     assert client.bucket_exists("onions")
     return client
