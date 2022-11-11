@@ -95,7 +95,7 @@ def get_html(onion):
                 html = session.get(http_onion, timeout=HTML_TIMEOUT) # Prints the contents of the page
         except Exception as e:
             print(f"ERROR ({e})", end="; ", flush=True)
-            time.sleep(2.0)
+            time.sleep(2*attempts)
             attempts = attempts + 1
     
     if html is False:
@@ -107,7 +107,7 @@ def get_html(onion):
 
 def save_html(client, onion, html):
     print("Saving HTML...", end=" ", flush=True)
-    bhtml = html.text.encode('utf-8')
+    bhtml = html.content
     buffer = io.BytesIO(bhtml)
     today = datetime.date.today()
     try:

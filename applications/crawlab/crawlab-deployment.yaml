@@ -13,7 +13,7 @@ spec:
         app: crawlab-master
     spec:
       containers:
-      - image: crawlabteam/crawlab:latest
+      - image: crawlabteam/crawlab:0.6.0
         imagePullPolicy: Always
         name: crawlab
         env:
@@ -33,6 +33,8 @@ spec:
           value: "N"
         - name: CRAWLAB_SERVER_REGISTER_TYPE
           value: "hostname"
+        - name: TZ
+          value: "Europe/Madrid"
         ports:
         - containerPort: 8080
           name: crawlab
