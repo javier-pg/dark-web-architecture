@@ -93,6 +93,7 @@ def get_html(onion):
             with requests.session() as session:
                 session.proxies = {'http': 'socks5h://torproxy.torproxy.svc.cluster.local:9050', 'https': 'socks5h://torproxy.torproxy.svc.cluster.local:9050'}
                 html = session.get(http_onion, timeout=HTML_TIMEOUT) # Prints the contents of the page
+                html.encoding = 'utf-8'
         except Exception as e:
             print(f"ERROR ({e})", end="; ", flush=True)
             time.sleep(2*attempts)
