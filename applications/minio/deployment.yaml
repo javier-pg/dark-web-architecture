@@ -6,6 +6,7 @@ metadata:
   name: minio
   namespace: minio
 spec:
+  restartPolicy: Always
   hostname: minio
   containers:
   - name: minio

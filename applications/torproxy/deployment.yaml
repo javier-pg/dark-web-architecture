@@ -21,3 +21,4 @@ spec:
         image: dperson/torproxy
         ports:
         - containerPort: 9050
+        - containerPort: 8118

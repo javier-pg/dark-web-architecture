@@ -8,5 +8,8 @@ spec:
   - port: 9050
     protocol: TCP
     targetPort: 9050
+  - port: 8118
+    protocol: TCP
+    targetPort: 8118
   selector:
     app: torproxy
