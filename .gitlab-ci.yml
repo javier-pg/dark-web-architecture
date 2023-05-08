@@ -24,7 +24,7 @@ build_kafka:
   image: docker:20.10.10
   variables:
     KAFKA_IMAGE_NAME: breacher/kafka
-    KAFKA_IMAGE_TAG: v1.0
+    KAFKA_IMAGE_TAG: 1.0
   before_script:
     - sleep 5s
   script:
@@ -41,7 +41,7 @@ build_oniondownloader:
   image: docker:20.10.10
   variables:
     ONIONDOWNLOADER_IMAGE_NAME: breacher/oniondownloader
-    ONIONDOWNLOADER_IMAGE_TAG: v1.0
+    ONIONDOWNLOADER_IMAGE_TAG: 2.0
   before_script:
     - sleep 5s
   script:
@@ -118,6 +118,8 @@ deploy_oniondownloader:
     - kubectl delete secret minio-credentials --ignore-not-found -n oniondownloader
     - kubectl create secret generic minio-credentials --from-literal=MINIO_ONION_ACCESS_KEY=$MINIO_ONION_ACCESS_KEY --from-literal=MINIO_ONION_SECRET_KEY=$MINIO_ONION_SECRET_KEY -n oniondownloader # define in Gitlab ENV
     - kubectl apply -f deployment.yaml
+    - kubectl apply -f mongo-statefulset.yaml
+    - kubectl apply -f mongo-service.yaml
   only:
     changes:
       - applications/oniondownloader/*

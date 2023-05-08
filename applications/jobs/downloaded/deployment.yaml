@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: downloaded
+  namespace: oniondownloader
+spec:
+  template:
+    spec:
+      containers:
+      - name: downloaded
+        image: 10.10.10.106:5000/breacher/downloaded:1.0
+        imagePullPolicy: Always
+      restartPolicy: Never

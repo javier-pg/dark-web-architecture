@@ -43,8 +43,8 @@ data:
     key.converter.schemas.enable=false
     value.converter.schemas.enable=false
     database=crawlab_test
-    collection=results_onions_farmer
     publish.full.document.only=true
+    pipeline=[{ "$match" : {"ns.coll": {"$in": ["results_onions_farmer","results_gateways","results_code_repositories","results_ioc_repositories"]}}}]
 ---
 # Source: kafka/templates/scripts-configmap.yaml
 apiVersion: v1
@@ -123,8 +123,6 @@ spec:
       port: 2181
       targetPort: client
       nodePort: null
-    
-    
     - name: follower
       port: 2888
       targetPort: follower

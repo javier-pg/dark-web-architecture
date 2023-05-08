@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: firstidentification
+  namespace: oniondownloader
+spec:
+  template:
+    spec:
+      containers:
+      - name: firstidentification
+        image: 10.10.10.106:5000/breacher/first_identification:2.0
+        imagePullPolicy: Always
+      restartPolicy: Never

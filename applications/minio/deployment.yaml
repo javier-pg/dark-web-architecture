@@ -10,7 +10,7 @@ spec:
   hostname: minio
   containers:
   - name: minio
-    image: quay.io/minio/minio:RELEASE.2022-10-21T22-37-48Z
+    image: quay.io/minio/minio:latest # RELEASE.2022-10-21T22-37-48Z
     command:
     - /bin/bash
     - -c
@@ -19,6 +19,8 @@ spec:
     volumeMounts:
     - mountPath: /data
       name: localvolume
+    - mountPath: /root/.mc
+      name: config
     env:
     - name: MINIO_ROOT_USER
       valueFrom:
@@ -32,6 +34,12 @@ spec:
           name: minio-credentials
           key: MINIO_ROOT_PASSWORD
           optional: false
+    #- name: MINIO_NOTIFY_KAFKA_ENABLE_PRIMARY
+    #  value: "on"
+    #- name: MINIO_NOTIFY_KAFKA_BROKERS_PRIMARY
+    #  value: "kafka.kafka:9092"
+    #- name: MINIO_NOTIFY_KAFKA_TOPIC
+    #  value: "htmls"
   nodeSelector:
     kubernetes.io/hostname: worker01 # Specify a node label associated to the Worker Node on which you want to deploy the pod.
   volumes:
@@ -39,3 +47,7 @@ spec:
     hostPath: # MinIO generally recommends using locally-attached volumes
       path: /hdd-storage/minio # Specify a path to a local drive or volume on the Kubernetes worker node
       type: DirectoryOrCreate # The path to the last directory must exist
+  - name: config
+    hostPath:
+      path: /hdd-storage/minio-config
+      type: DirectoryOrCreate

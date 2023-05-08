@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processing
+  namespace: processing
+  labels:
+    app: processing
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: processing
+  template:
+    metadata:
+      labels:
+        app: processing
+    spec:
+      containers:
+      - name: processing
+        image: 10.10.10.106:5000/breacher/processing:1.0
+        imagePullPolicy: Always

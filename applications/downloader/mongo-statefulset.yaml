@@ -1,0 +1,43 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: oniondownloader
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: "mongo"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - image: mongo:4
+        name: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+        - name: mongo-persistent-storage-downloader
+          mountPath: /data/db
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+          - "--bind_ip_all"   
+          # Execute in mongodb pod:
+          # rs.initiate({_id:"rs0", version: 1, members: [ {_id: 0, host: "mongo.oniondownloader.svc.cluster.local:27017"} ]})
+          # use crawlab_test 
+          # db.onions.createIndex({"onion":1},{unique:true})
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage-downloader
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Gi

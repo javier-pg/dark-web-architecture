@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: auxdownloader
+  namespace: oniondownloader
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 180
+  template:
+    spec:
+      containers:
+      - name: auxdownloader
+        image: 10.10.10.106:5000/breacher/auxdownloader:1.0
+        imagePullPolicy: Always
+      restartPolicy: Never

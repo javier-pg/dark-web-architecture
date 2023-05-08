@@ -40,3 +40,4 @@ spec:
           name: crawlab
         - containerPort: 9666
           name: grpc
+# install duckduckgo_search

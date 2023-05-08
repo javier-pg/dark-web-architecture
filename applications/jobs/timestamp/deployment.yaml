@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: timestamp
+  namespace: oniondownloader
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 180
+  template:
+    spec:
+      containers:
+      - name: timestamp
+        image: 10.10.10.106:5000/breacher/timestamp:1.0
+        imagePullPolicy: Always
+      restartPolicy: Never

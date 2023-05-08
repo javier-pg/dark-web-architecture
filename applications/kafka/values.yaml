@@ -80,7 +80,7 @@ extraDeploy:
         key.converter.schemas.enable=false
         value.converter.schemas.enable=false
         database=crawlab_test
-        collection=results_onions_farmer
+        pipeline=[{ "$match" : {"ns.coll": {"$in": ["results_onions_farmer","results_gateways","results_code_repositories"]}}}]
         publish.full.document.only=true
   - |
     apiVersion: v1
